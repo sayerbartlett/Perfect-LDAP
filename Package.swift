@@ -13,7 +13,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/PerfectSideRepos/Perfect-ICONV.git", from: "3.0.0"),
         .package(url: "https://github.com/Altarix/Perfect-libSASL.git", from: "1.0.0"),
-        .package(url: "https://github.com/Altarix/Perfect-OpenLDAP.git", from: "1.0.0"),
+        .package(url: "https://github.com/Altarix/Perfect-LDAP.git", from: "1.0.0"),
     ],
     targets: [
         .target(
