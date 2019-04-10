@@ -890,6 +890,7 @@ public class LDAP {
   /// - parameters:
   ///   - distinguishedName: specific DN
   ///   - attributes: attributes as an dictionary to modify
+  ///   - modifyType: the modify operation to perform
   /// - throws:
   ///   - Exception with message, such as no permission, or object class violation, etc.
   
@@ -919,6 +920,7 @@ public class LDAP {
   /// - parameters:
   ///   - distinguishedName: specific DN
   ///   - attributes: attributes as an dictionary to modify
+  ///   - modifyType: the modify operation to perform
   ///   - completion: callback once done. If something wrong, an error message will pass to the closure.
   
   public func modify(distinguishedName: String, attributes: [String:[String]], modifyType: ModifyType ,completion: @escaping (String?)-> Void) {

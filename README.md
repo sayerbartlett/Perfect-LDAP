@@ -52,8 +52,7 @@ Ensure you have installed and activated the latest Swift 4.0 tool chain.
 Add the following dependency to your project's Package.swift file:
 
 ``` swift
-.package(url: "https://github.com/PerfectlySoft/Perfect-LDAP.git", 
-from: "3.0.0")
+.package(url: "https://github.com/PerfectlySoft/Perfect-LDAP.git", from: "3.0.0")
 
 // in the target section:
 depedencies: ["PerfectLDAP"]
@@ -237,19 +236,20 @@ connection.add(distinguishedName: "CN=judy,CN=User,DC=perfect,DC=com", attribute
 Function `LDAP.modify()` can modify attributes from a specific DN with parameters below:
 - distinguishedName: String, specific DN
 - attributes:[String:[String]], attributes as an dictionary to modify. In this dictionary, every attribute, as a unique key in the dictionary, could have a series of values as an array.
+- modifyType: ModifyType, an enum to specify the operation type to perform. See [LDAP Operations](https://ldap3.readthedocs.io/modify.html) for more information on the options.
 
 Both asynchronous modify() and synchronous modify() share the same parameters above, take example:
 
 ``` swift
 // try an modify() synchronously.
 do {
-  try connection.modify(distinguishedName: "CN=judy,CN=User,DC=perfect,DC=com", attributes: ["codePage":["437"]])
+  try connection.modify(distinguishedName: "CN=judy,CN=User,DC=perfect,DC=com", attributes: ["codePage":["437"]], modifyType: .add)
 }catch (let err) {
     // failed for some reason
 }
 
 // try and modify() asynchronously:
-connection.modify(distinguishedName: "CN=judy,CN=User,DC=perfect,DC=com", attributes:["codePage":["437"]]) { err in
+connection.modify(distinguishedName: "CN=judy,CN=User,DC=perfect,DC=com", attributes:["codePage":["437"]], modifyType: .add) { err in
   // if nothing wrong, err will be nil
 }
 ```
