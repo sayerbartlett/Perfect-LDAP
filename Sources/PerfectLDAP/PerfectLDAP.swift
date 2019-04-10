@@ -867,6 +867,25 @@ public class LDAP {
     }//end dispatch
   }//end func
 
+/// Available MODIFY Functionality
+/// - computed propeties:
+///   - operation: returns the corresponding LDAP_MOD operation
+  public enum ModifyType {
+    case add
+    case delete
+    case replace
+    case increment
+  
+    var operation: Int32 {
+      switch self {
+      case .add: return LDAP_MOD_ADD
+      case .delete: return LDAP_MOD_DELETE
+      case .replace: return LDAP_MOD_REPLACE
+      case .increment: return LDAP_MOD_INCREMENT
+      }
+    }
+  }
+
   /// modify an attribute to a DN
   /// - parameters:
   ///   - distinguishedName: specific DN
@@ -874,13 +893,13 @@ public class LDAP {
   /// - throws:
   ///   - Exception with message, such as no permission, or object class violation, etc.
   
-  public func modify(distinguishedName: String, attributes: [String:[String]]) throws {
+  public func modify(distinguishedName: String, attributes: [String:[String]], modifyType: ModifyType) throws {
 
     // map the keys to an array
     let keys:[String] = attributes.keys.map { $0 }
 
     // map the key array to a modification array
-    let mods:[LDAPMod] = keys.map { self.modAlloc(method: LDAP_MOD_REPLACE | LDAP_MOD_BVALUES, key: $0, values: attributes[$0]!)}
+    let mods:[LDAPMod] = keys.map { self.modAlloc(method: modifyType.operation | LDAP_MOD_BVALUES, key: $0, values: attributes[$0]!)}
 
     // get the pointers
     let pMods = mods.asUnsafeNullTerminatedPointers()
@@ -902,11 +921,11 @@ public class LDAP {
   ///   - attributes: attributes as an dictionary to modify
   ///   - completion: callback once done. If something wrong, an error message will pass to the closure.
   
-  public func modify(distinguishedName: String, attributes: [String:[String]],completion: @escaping (String?)-> Void) {
+  public func modify(distinguishedName: String, attributes: [String:[String]], modifyType: ModifyType ,completion: @escaping (String?)-> Void) {
     threading.async {
       do {
         // perform adding
-        try self.modify(distinguishedName: distinguishedName, attributes: attributes)
+        try self.modify(distinguishedName: distinguishedName, attributes: attributes, modifyType: modifyType)
 
         // if nothing wrong, callback
         completion(nil)
